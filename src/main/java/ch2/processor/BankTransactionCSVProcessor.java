@@ -52,4 +52,24 @@ public class BankTransactionCSVProcessor implements BankTransactionProcessor {
                 .count(count)
                 .build();
     }
+
+    @Override
+    public BankTransactionResult processCategory(String category) {
+        double income = 0d;
+        double spending = 0d;
+        int count = 0;
+        for (BankTransactionStatement statement : statements) {
+            if (statement.getCategory().equals(category)) {
+                income += statement.getIncome();
+                spending += statement.getSpending();
+                count++;
+            }
+        }
+
+        return BankTransactionResult.builder()
+                .income(income)
+                .spending(spending)
+                .count(count)
+                .build();
+    }
 }

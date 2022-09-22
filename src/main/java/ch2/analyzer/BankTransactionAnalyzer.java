@@ -33,14 +33,19 @@ public class BankTransactionAnalyzer {
         List<BankTransactionStatement> statements = parser.parse(lines);
         processor = new BankTransactionCSVProcessor(statements);
         printTotalAmount();
-        printBanlanceInMonth(month);
+        printBalanceInMonth(month);
+        printBalanceWithCategory("Tesco");
     }
 
     private void printTotalAmount() {
-        report.report(processor.processTotal());
+        report.report("Total", processor.processTotal());
     }
 
-    private void printBanlanceInMonth(Month month) {
-        report.reportInMonth(processor.processInMonth(month),month);
+    private void printBalanceInMonth(Month month) {
+        report.report(month.toString(), processor.processInMonth(month));
+    }
+
+    private void printBalanceWithCategory(String category) {
+        report.report(category, processor.processCategory(category));
     }
 }

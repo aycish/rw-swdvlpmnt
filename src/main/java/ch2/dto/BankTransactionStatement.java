@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Builder
 public class BankTransactionStatement {
     private LocalDate date;
+    private String category;
     private double income;
     private double spending;
 }

@@ -41,6 +41,7 @@ public class BankTransactionCSVParser implements BankTransactionStatementParser{
                 .income(income)
                 .spending(spending)
                 .date(localDate)
+                .category(columns[2])
                 .build();
 
     }

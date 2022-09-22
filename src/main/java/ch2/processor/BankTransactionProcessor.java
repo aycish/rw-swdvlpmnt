@@ -9,4 +9,5 @@ import java.util.List;
 public interface BankTransactionProcessor {
     BankTransactionResult processInMonth(Month month);
     BankTransactionResult processTotal();
+    BankTransactionResult processCategory(String category);
 }
