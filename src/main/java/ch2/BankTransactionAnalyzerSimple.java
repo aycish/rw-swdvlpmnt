@@ -22,7 +22,6 @@ public class BankTransactionAnalyzerSimple {
     }
 
     private static void printBalance(List<String> lines) {
-        double totalAmount = 0d;
         double income = 0d;
         double spending = 0d;
 
@@ -35,8 +34,7 @@ public class BankTransactionAnalyzerSimple {
 
         }
 
-        totalAmount = income + spending;
-        System.out.println(MessageFormat.format("Income = {0}, Spending = {1}, Balance = {2}", income, spending, totalAmount));
+        System.out.println(MessageFormat.format("Income = {0}, Spending = {1}, Balance = {2}", income, spending, income + spending));
     }
 
     private static void printJanTransactionCount(List<String> lines) {
