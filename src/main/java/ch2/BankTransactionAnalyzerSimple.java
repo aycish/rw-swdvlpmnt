@@ -16,13 +16,19 @@ public class BankTransactionAnalyzerSimple {
         final List<String> lines = Files.readAllLines(path);
 
         double totalAmount = 0d;
+        double income = 0d;
+        double spending = 0d;
 
         for (String line : lines) {
             String[] colums = line.split(",");
-            System.out.println(colums[1]);
-            totalAmount += Double.parseDouble(colums[1]);
+            double amount = Double.parseDouble(colums[1]);
+
+            if (amount > 0d) income += amount;
+            else spending += amount;
+
         }
 
-        System.out.println(MessageFormat.format("Balance = {0}", totalAmount));
+        totalAmount = income + spending;
+        System.out.println(MessageFormat.format("Income = {0}, Spending = {1}, Balance = {2}", income, spending, totalAmount));
     }
 }

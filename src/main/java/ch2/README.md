@@ -31,7 +31,7 @@
 
 ### 구현 과정
 
-1.KISS(Keep It Short and Simple) 원칙을 이용하여 응용 프로그램 코드를 한 개의 클래스로 구현 
-- 프로그램 Argument로 transaction 파일 명시 필요 (Resource에 있다고 가정)
-
-2. 
+1. 은행 입출금 내역의 총 수입과 총 지출의 합은 얼마인가? 
+   - KISS(Keep It Short and Simple) 원칙을 이용하여 응용 프로그램 코드를 한 개의 클래스로 구현 
+   - 프로그램 Argument로 transaction 파일 명시 필요 (Resource에 있다고 가정)
+   - 총 수입과 총 지출을 구한 뒤, 합 산출
