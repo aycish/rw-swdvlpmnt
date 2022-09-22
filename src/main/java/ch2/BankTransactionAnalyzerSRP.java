@@ -1,5 +1,6 @@
 package ch2;
 
+import ch2.analyzer.BankTransactionAnalyzer;
 import ch2.dto.BankTransactionStatement;
 import ch2.parser.BankTransactionCSVParser;
 import ch2.parser.BankTransactionStatementParser;
@@ -17,31 +18,9 @@ import java.util.List;
 public class BankTransactionAnalyzerSRP {
 
     private static final String RESOURCES = "src/main/resources/";
-    static BankTransactionFileReader reader = new BankTransactionCSVReader();
-    static BankTransactionStatementParser parser = new BankTransactionCSVParser();
-    static BankTransactionProcessor processor = new BankTransactionCSVProcessor();
-    static BankTransactionReport report = new BankTransactionCSVReport();
-    static List<String> lines;
-
+    private static BankTransactionStatementParser parser = new BankTransactionCSVParser();
     public static void main(String[] args) {
-
-        try {
-            lines = reader.read(RESOURCES + args[0]);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        List<BankTransactionStatement> statements = parser.parse(lines);
-        printTotalAmount(statements);
-        printBanlanceInMonth(statements, Month.of(Integer.parseInt(args[1])));
-    }
-
-    private static void printTotalAmount(List<BankTransactionStatement> statements) {
-        report.report(processor.processTotal(statements));
-    }
-
-    private static void printBanlanceInMonth(List<BankTransactionStatement> statements, Month month) {
-        report.reportInMonth(processor.processInMonth(statements, month),month);
+        BankTransactionAnalyzer analyzer = new BankTransactionAnalyzer();
+        analyzer.analyze(RESOURCES + args[0], Month.of(Integer.parseInt(args[1])), parser);
     }
 }

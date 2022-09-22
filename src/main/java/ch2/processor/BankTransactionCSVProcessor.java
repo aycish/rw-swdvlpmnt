@@ -6,19 +6,25 @@ import ch2.dto.BankTransactionStatement;
 import java.time.Month;
 import java.util.List;
 
-public class BankTransactionCSVProcessor implements BankTransactionProcessor{
+public class BankTransactionCSVProcessor implements BankTransactionProcessor {
+
+    private final List<BankTransactionStatement> statements;
+
+    public BankTransactionCSVProcessor(final List<BankTransactionStatement> statements) {
+        this.statements = statements;
+    }
 
     @Override
-    public BankTransactionResult processInMonth(List<BankTransactionStatement> bankTransactionStatements, Month month) {
+    public BankTransactionResult processInMonth(Month month) {
         double income = 0d;
         double spending = 0d;
         int count = 0;
 
-        for (BankTransactionStatement statement : bankTransactionStatements) {
+        for (BankTransactionStatement statement : statements) {
             if (statement.getDate().getMonth().equals(month)) {
-               income += statement.getIncome();
-               spending += statement.getSpending();
-               count ++;
+                income += statement.getIncome();
+                spending += statement.getSpending();
+                count++;
             }
         }
 
@@ -30,14 +36,14 @@ public class BankTransactionCSVProcessor implements BankTransactionProcessor{
     }
 
     @Override
-    public BankTransactionResult processTotal(List<BankTransactionStatement> bankTransactionStatements) {
+    public BankTransactionResult processTotal() {
         double income = 0d;
         double spending = 0d;
         int count = 0;
-        for (BankTransactionStatement statement : bankTransactionStatements) {
+        for (BankTransactionStatement statement : statements) {
             income += statement.getIncome();
             spending += statement.getSpending();
-            count ++;
+            count++;
         }
 
         return BankTransactionResult.builder()

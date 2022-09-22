@@ -7,6 +7,6 @@ import java.time.Month;
 import java.util.List;
 
 public interface BankTransactionProcessor {
-    BankTransactionResult processInMonth(List<BankTransactionStatement> bankTransactionStatements, Month month);
-    BankTransactionResult processTotal(List<BankTransactionStatement> bankTransactionStatements);
+    BankTransactionResult processInMonth(Month month);
+    BankTransactionResult processTotal();
 }
