@@ -1,7 +1,6 @@
 package ch2.analyzer;
 
 import ch2.dto.BankTransactionStatement;
-import ch2.parser.BankTransactionCSVParser;
 import ch2.parser.BankTransactionStatementParser;
 import ch2.processor.BankTransactionCSVProcessor;
 import ch2.processor.BankTransactionProcessor;
@@ -35,17 +34,27 @@ public class BankTransactionAnalyzer {
         printTotalAmount();
         printBalanceInMonth(month);
         printBalanceWithCategory("Tesco");
+        printFewestBalance();
+        printTOP3Spending();
     }
 
     private void printTotalAmount() {
-        report.report("Total", processor.processTotal());
+        report.report("", processor.processTotal());
     }
 
     private void printBalanceInMonth(Month month) {
-        report.report(month.toString(), processor.processInMonth(month));
+        report.report("Month : ", processor.processInMonth(month));
     }
 
     private void printBalanceWithCategory(String category) {
-        report.report(category, processor.processCategory(category));
+        report.report("Category : ", processor.processCategory(category));
+    }
+
+    private void printFewestBalance() {
+        report.report("Fewest Balance : ", processor.processFewestBalance());
+    }
+
+    private void printTOP3Spending() {
+        report.reportList("TOP3 Spending", processor.processTop3());
     }
 }

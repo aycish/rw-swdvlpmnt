@@ -3,7 +3,7 @@ package ch2.reporter;
 import ch2.dto.BankTransactionResult;
 
 import java.text.MessageFormat;
-import java.time.Month;
+import java.util.List;
 
 public class BankTransactionCSVReport implements BankTransactionReport{
 
@@ -11,7 +11,15 @@ public class BankTransactionCSVReport implements BankTransactionReport{
 
     @Override
     public void report(String object, BankTransactionResult result) {
-        System.out.println(MessageFormat.format(MESSAGE_FORMAT, object, result.getIncome(), result.getSpending(), result.getIncome() + result.getSpending()));
+        System.out.println(MessageFormat.format(MESSAGE_FORMAT, object + result.getCategory(), result.getIncome(), result.getSpending(), result.getIncome() + result.getSpending()));
+    }
+
+    @Override
+    public void reportList(String object, List<BankTransactionResult> results) {
+        System.out.println(MessageFormat.format("####### {0} #######",object));
+        for (BankTransactionResult result : results) {
+            report("", result);
+        }
     }
 
 }

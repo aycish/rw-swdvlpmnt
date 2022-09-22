@@ -4,7 +4,9 @@ import ch2.dto.BankTransactionResult;
 import ch2.dto.BankTransactionStatement;
 
 import java.time.Month;
-import java.util.List;
+import java.util.*;
+
+import static java.lang.Math.abs;
 
 public class BankTransactionCSVProcessor implements BankTransactionProcessor {
 
@@ -32,6 +34,7 @@ public class BankTransactionCSVProcessor implements BankTransactionProcessor {
                 .income(income)
                 .spending(spending)
                 .count(count)
+                .category(month.toString())
                 .build();
     }
 
@@ -50,6 +53,7 @@ public class BankTransactionCSVProcessor implements BankTransactionProcessor {
                 .income(income)
                 .spending(spending)
                 .count(count)
+                .category("Total")
                 .build();
     }
 
@@ -70,6 +74,46 @@ public class BankTransactionCSVProcessor implements BankTransactionProcessor {
                 .income(income)
                 .spending(spending)
                 .count(count)
+                .category(category)
                 .build();
+    }
+
+    @Override
+    public BankTransactionResult processFewestBalance() {
+        double income = 0d;
+        double spending = 0d;
+        String category = "";
+        int count = 1;
+        for (BankTransactionStatement statement : statements) {
+            if ((statement.getSpending() + statement.getIncome()) < income + spending) {
+                income = statement.getIncome();
+                spending = statement.getSpending();
+                category = statement.getCategory();
+            }
+        }
+
+        return BankTransactionResult.builder()
+                .income(income)
+                .spending(spending)
+                .count(count)
+                .category(category)
+                .build();
+    }
+
+    @Override
+    public List<BankTransactionResult> processTop3() {
+        List<BankTransactionResult> results = new ArrayList<>();
+        Set<String> categories = new HashSet<>();
+
+        for (BankTransactionStatement statement : statements) {
+            categories.add(statement.getCategory());
+        }
+
+        for (String category : categories) {
+            results.add(processCategory(category));
+        }
+
+        results.sort(Comparator.comparing((BankTransactionResult::getSpending)));
+        return results.subList(0,3);
     }
 }
