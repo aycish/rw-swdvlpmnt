@@ -23,7 +23,8 @@ public class BankTransactionCSVParser implements BankTransactionStatementParser{
         return bankTransactionStatements;
     }
 
-    private BankTransactionStatement parseLine(String line) {
+    @Override
+    public BankTransactionStatement parseLine(String line) {
         final String[] columns = line.split(",");
         final LocalDate localDate = LocalDate.parse(columns[0], DATE_FORMAT);
 
