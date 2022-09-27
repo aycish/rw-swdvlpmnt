@@ -3,6 +3,7 @@ package ch2.analyzer;
 import ch2.dto.BankTransactionStatement;
 import ch2.parser.BankTransactionStatementParser;
 import ch2.processor.BankTransactionCSVProcessor;
+import ch2.processor.BankTransactionFilter;
 import ch2.processor.BankTransactionProcessor;
 import ch2.reader.BankTransactionCSVReader;
 import ch2.reader.BankTransactionFileReader;
@@ -36,6 +37,8 @@ public class BankTransactionAnalyzer {
         printBalanceWithCategory("Tesco");
         printFewestBalance();
         printTOP3Spending();
+        printAction(trns -> trns.getDate().getMonth().equals(Month.JANUARY));
+        printAction(trns -> trns.getTotalAmount() >= 100);
     }
 
     private void printTotalAmount() {
@@ -56,5 +59,9 @@ public class BankTransactionAnalyzer {
 
     private void printTOP3Spending() {
         report.reportList("TOP3 Spending", processor.processTop3());
+    }
+
+    private void printAction(BankTransactionFilter filter) {
+        report.reportList("action filter", processor.findTransactions(filter));
     }
 }

@@ -16,7 +16,7 @@ public class BankTransactionCSVReport implements BankTransactionReport{
 
     @Override
     public void reportList(String object, List<BankTransactionResult> results) {
-        System.out.println(MessageFormat.format("####### {0} #######",object));
+        System.out.println(MessageFormat.format("####### {0} #######", object));
         for (BankTransactionResult result : results) {
             report("", result);
         }

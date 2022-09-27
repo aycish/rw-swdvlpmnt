@@ -90,27 +90,11 @@ public class BankTransactionCSVProcessor implements BankTransactionProcessor {
     }
 
     @Override
-    public List<BankTransactionResult> findTransactionsGreaterThanEqual(final int amount) {
-        final List<BankTransactionResult> results = new ArrayList<>();
+    public List<BankTransactionResult> findTransactions(BankTransactionFilter filter) {
+        List<BankTransactionResult> results = new ArrayList<>();
 
         for (BankTransactionStatement statement : statements) {
-            if (statement.getIncome() + statement.getSpending() >= amount) {
-                BankTransactionResult result = statement.toResult();
-                results.add(result);
-            }
-        }
-
-        return results;
-    }
-
-    @Override
-    public List<BankTransactionResult> findTransactionsInMonth(Month month) {
-        final List<BankTransactionResult> results = new ArrayList<>();
-
-        for (BankTransactionStatement statement : statements) {
-            if (statement.getDate().getMonth().equals(month)) {
-                results.add(statement.toResult());
-            }
+            if (filter.test(statement)) results.add(statement.toResult());
         }
 
         return results;

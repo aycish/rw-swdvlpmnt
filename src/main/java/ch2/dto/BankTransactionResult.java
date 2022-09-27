@@ -9,5 +9,6 @@ public class BankTransactionResult {
     private String category;
     private double income;
     private double spending;
+    @Builder.Default
     private int count = 1;
 }
