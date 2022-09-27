@@ -14,7 +14,7 @@ public class BankTransactionStatement {
     private double spending;
 
     public BankTransactionResult toResult() {
-        return BankTransactionResult.builder().income(income).spending(spending).count(0).category(category).build();
+        return BankTransactionResult.builder().income(income).spending(spending).category(category).build();
     }
 
     public double getTotalAmount() {

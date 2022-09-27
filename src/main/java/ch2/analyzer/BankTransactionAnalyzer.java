@@ -4,10 +4,9 @@ import ch2.dto.BankTransactionStatement;
 import ch2.parser.BankTransactionStatementParser;
 import ch2.processor.BankTransactionCSVProcessor;
 import ch2.processor.BankTransactionFilter;
-import ch2.processor.BankTransactionProcessor;
 import ch2.reader.BankTransactionCSVReader;
 import ch2.reader.BankTransactionFileReader;
-import ch2.reporter.BankTransactionCSVReport;
+import ch2.reporter.StandardReporter;
 import ch2.reporter.BankTransactionReport;
 
 import java.io.IOException;
@@ -17,8 +16,8 @@ import java.util.List;
 public class BankTransactionAnalyzer {
 
     BankTransactionFileReader reader = new BankTransactionCSVReader();
-    BankTransactionReport report = new BankTransactionCSVReport();
-    BankTransactionProcessor processor;
+    BankTransactionReport report = new StandardReporter();
+    BankTransactionCSVProcessor processor;
     List<String> lines;
 
     public void analyze(final String filePath, final Month month, BankTransactionStatementParser parser) {
@@ -32,36 +31,16 @@ public class BankTransactionAnalyzer {
 
         List<BankTransactionStatement> statements = parser.parse(lines);
         processor = new BankTransactionCSVProcessor(statements);
-        printTotalAmount();
-        printBalanceInMonth(month);
-        printBalanceWithCategory("Tesco");
-        printFewestBalance();
-        printTOP3Spending();
-        printAction(trns -> trns.getDate().getMonth().equals(Month.JANUARY));
-        printAction(trns -> trns.getTotalAmount() >= 100);
+        printSummerizeInMonth(Month.JANUARY);
+        printAction("January", trns -> trns.getDate().getMonth().equals(Month.JANUARY));
+        printAction("Greater than 100", trns -> trns.getTotalAmount() >= 100);
     }
 
-    private void printTotalAmount() {
-        report.report("", processor.processTotal());
+    private void printSummerizeInMonth(Month month) {
+        report.report("Total in month [" + month.toString() + "]", processor.calculateTotalInMonth(month));
     }
 
-    private void printBalanceInMonth(Month month) {
-        report.report("Month : ", processor.processInMonth(month));
-    }
-
-    private void printBalanceWithCategory(String category) {
-        report.report("Category : ", processor.processCategory(category));
-    }
-
-    private void printFewestBalance() {
-        report.report("Fewest Balance : ", processor.processFewestBalance());
-    }
-
-    private void printTOP3Spending() {
-        report.reportList("TOP3 Spending", processor.processTop3());
-    }
-
-    private void printAction(BankTransactionFilter filter) {
-        report.reportList("action filter", processor.findTransactions(filter));
+    private void printAction(String contents, BankTransactionFilter filter) {
+        report.reportList(contents, processor.findTransactions(filter));
     }
 }

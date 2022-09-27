@@ -6,9 +6,10 @@ import lombok.Data;
 @Data
 @Builder
 public class BankTransactionResult {
-    private String category;
-    private double income;
-    private double spending;
     @Builder.Default
-    private int count = 1;
+    private String category = "";
+    @Builder.Default
+    private double income = 0d;
+    @Builder.Default
+    private double spending = 0d;
 }

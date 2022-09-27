@@ -6,7 +6,7 @@ import ch2.dto.BankTransactionStatement;
 import java.time.Month;
 import java.util.*;
 
-public class BankTransactionCSVProcessor implements BankTransactionProcessor {
+public class BankTransactionCSVProcessor {
 
     private final List<BankTransactionStatement> statements;
 
@@ -14,82 +14,30 @@ public class BankTransactionCSVProcessor implements BankTransactionProcessor {
         this.statements = statements;
     }
 
-    @Override
-    public BankTransactionResult processInMonth(Month month) {
-        double income = 0d;
-        double spending = 0d;
-        int count = 0;
+    public BankTransactionResult summerizeTransactions(BankResultSummerizer summerizer) {
+        BankTransactionResult result = null;
 
-        for (BankTransactionStatement statement : statements) {
-            if (statement.getDate().getMonth().equals(month)) {
-                income += statement.getIncome();
-                spending += statement.getSpending();
-                count++;
-            }
+        for (final BankTransactionStatement statement : statements) {
+            result = summerizer.summerize(statement, result);
         }
 
-        return BankTransactionResult.builder()
-                .income(income)
-                .spending(spending)
-                .count(count)
-                .category(month.toString())
-                .build();
-    }
-
-    @Override
-    public BankTransactionResult processTotal() {
-        double income = 0d;
-        double spending = 0d;
-        int count = 0;
-        for (BankTransactionStatement statement : statements) {
-            income += statement.getIncome();
-            spending += statement.getSpending();
-            count++;
-        }
-
-        return BankTransactionResult.builder()
-                .income(income)
-                .spending(spending)
-                .count(count)
-                .category("Total")
-                .build();
-    }
-
-    @Override
-    public BankTransactionResult processCategory(String category) {
-        double income = 0d;
-        double spending = 0d;
-        int count = 0;
-        for (BankTransactionStatement statement : statements) {
-            if (statement.getCategory().equals(category)) {
-                income += statement.getIncome();
-                spending += statement.getSpending();
-                count++;
-            }
-        }
-
-        return BankTransactionResult.builder()
-                .income(income)
-                .spending(spending)
-                .count(count)
-                .category(category)
-                .build();
-    }
-
-    @Override
-    public BankTransactionResult processFewestBalance() {
-        BankTransactionStatement fewest = null;
-        for (BankTransactionStatement statement : statements) {
-            if (fewest == null || statement.getTotalAmount() < fewest.getTotalAmount()) {
-                fewest = statement;
-            }
-        }
-
-        BankTransactionResult result = fewest.toResult();
         return result;
     }
 
-    @Override
+    public BankTransactionResult calculateTotalInMonth(final Month month) {
+        return summerizeTransactions((statement, result) -> {
+
+            if (statement.getDate().getMonth().equals(month)) {
+                if (result == null) return statement.toResult();
+
+                result.setIncome(statement.getIncome() + result.getIncome());
+                result.setSpending(statement.getSpending() + result.getSpending());
+            }
+
+            return result;
+        });
+    }
+
     public List<BankTransactionResult> findTransactions(BankTransactionFilter filter) {
         List<BankTransactionResult> results = new ArrayList<>();
 
@@ -100,20 +48,5 @@ public class BankTransactionCSVProcessor implements BankTransactionProcessor {
         return results;
     }
 
-    @Override
-    public List<BankTransactionResult> processTop3() {
-        List<BankTransactionResult> results = new ArrayList<>();
-        Set<String> categories = new HashSet<>();
 
-        for (BankTransactionStatement statement : statements) {
-            categories.add(statement.getCategory());
-        }
-
-        for (String category : categories) {
-            results.add(processCategory(category));
-        }
-
-        results.sort(Comparator.comparing((BankTransactionResult::getSpending)));
-        return results.subList(0, 3);
-    }
 }
