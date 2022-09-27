@@ -10,5 +10,7 @@ public interface BankTransactionProcessor {
     BankTransactionResult processTotal();
     BankTransactionResult processCategory(String category);
     BankTransactionResult processFewestBalance();
+    List<BankTransactionResult> findTransactionsGreaterThanEqual(int amount);
+    List<BankTransactionResult> findTransactionsInMonth(Month month);
     List<BankTransactionResult> processTop3();
 }

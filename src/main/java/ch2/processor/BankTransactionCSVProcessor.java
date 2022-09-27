@@ -6,8 +6,6 @@ import ch2.dto.BankTransactionStatement;
 import java.time.Month;
 import java.util.*;
 
-import static java.lang.Math.abs;
-
 public class BankTransactionCSVProcessor implements BankTransactionProcessor {
 
     private final List<BankTransactionStatement> statements;
@@ -80,24 +78,42 @@ public class BankTransactionCSVProcessor implements BankTransactionProcessor {
 
     @Override
     public BankTransactionResult processFewestBalance() {
-        double income = 0d;
-        double spending = 0d;
-        String category = "";
-        int count = 1;
+        BankTransactionStatement fewest = null;
         for (BankTransactionStatement statement : statements) {
-            if ((statement.getSpending() + statement.getIncome()) < income + spending) {
-                income = statement.getIncome();
-                spending = statement.getSpending();
-                category = statement.getCategory();
+            if (fewest == null || statement.getTotalAmount() < fewest.getTotalAmount()) {
+                fewest = statement;
             }
         }
 
-        return BankTransactionResult.builder()
-                .income(income)
-                .spending(spending)
-                .count(count)
-                .category(category)
-                .build();
+        BankTransactionResult result = fewest.toResult();
+        return result;
+    }
+
+    @Override
+    public List<BankTransactionResult> findTransactionsGreaterThanEqual(final int amount) {
+        final List<BankTransactionResult> results = new ArrayList<>();
+
+        for (BankTransactionStatement statement : statements) {
+            if (statement.getIncome() + statement.getSpending() >= amount) {
+                BankTransactionResult result = statement.toResult();
+                results.add(result);
+            }
+        }
+
+        return results;
+    }
+
+    @Override
+    public List<BankTransactionResult> findTransactionsInMonth(Month month) {
+        final List<BankTransactionResult> results = new ArrayList<>();
+
+        for (BankTransactionStatement statement : statements) {
+            if (statement.getDate().getMonth().equals(month)) {
+                results.add(statement.toResult());
+            }
+        }
+
+        return results;
     }
 
     @Override
@@ -114,6 +130,6 @@ public class BankTransactionCSVProcessor implements BankTransactionProcessor {
         }
 
         results.sort(Comparator.comparing((BankTransactionResult::getSpending)));
-        return results.subList(0,3);
+        return results.subList(0, 3);
     }
 }

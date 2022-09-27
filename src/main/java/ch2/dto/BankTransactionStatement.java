@@ -12,4 +12,12 @@ public class BankTransactionStatement {
     private String category;
     private double income;
     private double spending;
+
+    public BankTransactionResult toResult() {
+        return BankTransactionResult.builder().income(income).spending(spending).count(0).category(category).build();
+    }
+
+    public double getTotalAmount() {
+        return income + spending;
+    }
 }
