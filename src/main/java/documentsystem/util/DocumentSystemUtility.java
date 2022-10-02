@@ -5,6 +5,10 @@ import java.io.File;
 public class DocumentSystemUtility {
 
     public static String getFileExtension(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".") + 1);
+        String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+
+        if (extension.equals("jpg")) return "image";
+
+        return extension;
     }
 }

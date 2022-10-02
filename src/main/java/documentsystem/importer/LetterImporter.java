@@ -1,6 +1,7 @@
 package documentsystem.importer;
 
 import documentsystem.constants.Attribute;
+import documentsystem.constants.ImporterType;
 import documentsystem.document.Document;
 import documentsystem.util.DocumentSystemUtility;
 import lombok.Builder;
@@ -16,6 +17,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Optional;
 
+import static documentsystem.constants.Attribute.*;
+
 @Data
 @Builder
 @RequiredArgsConstructor
@@ -25,7 +28,6 @@ public class LetterImporter implements Importer{
     @Override
     public Document importFile(File file) {
         /* validation logic : extension Check */
-        if (!file.exists()) throw new IllegalArgumentException("File not exist");
         if (!DocumentSystemUtility.getFileExtension(file.getName()).equals(EXTENSION))
             throw new IllegalArgumentException("File extension has to be " + EXTENSION);
 
@@ -38,11 +40,11 @@ public class LetterImporter implements Importer{
             e.printStackTrace();
         }
 
-        attributes.put(Attribute.PATH, file.getPath());
-        attributes.put(Attribute.TYPE, EXTENSION);
-        attributes.put(Attribute.PATIENT, getPatientName(lines));
+        attributes.put(PATH, file.getPath());
+        attributes.put(TYPE, EXTENSION);
+        attributes.put(PATIENT, getPatientName(lines));
 
-        return Document.builder().attributes(attributes).lines(lines).build();
+        return Document.builder().attributes(attributes).lines(lines).type(ImporterType.valueOf(EXTENSION.toUpperCase())).build();
     }
 
     private String getPatientName(List<String> lines) {

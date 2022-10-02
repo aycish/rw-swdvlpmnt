@@ -1,6 +1,7 @@
 package documentsystem.importer;
 
 import documentsystem.constants.Attribute;
+import documentsystem.constants.ImporterType;
 import documentsystem.document.Document;
 import documentsystem.util.DocumentSystemUtility;
 
@@ -9,11 +10,10 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 
 public class ImageImporter implements Importer {
-    private static final String EXTENSION = "jpg";
+    private static final String EXTENSION = "image";
 
     @Override
     public Document importFile(File file) {
-        if (!file.exists()) throw new IllegalArgumentException("File not exist");
         if (!DocumentSystemUtility.getFileExtension(file.getName()).equals(EXTENSION))
             throw new IllegalArgumentException("File extension has to be " + EXTENSION);
 
@@ -22,6 +22,6 @@ public class ImageImporter implements Importer {
         attributes.put(Attribute.PATH, file.getPath());
         attributes.put(Attribute.TYPE, EXTENSION);
 
-        return Document.builder().attributes(attributes).lines(new ArrayList<>()).build();
+        return Document.builder().attributes(attributes).lines(new ArrayList<>()).type(ImporterType.valueOf(EXTENSION.toUpperCase())).build();
     }
 }

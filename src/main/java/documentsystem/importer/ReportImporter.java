@@ -1,6 +1,7 @@
 package documentsystem.importer;
 
 import documentsystem.constants.Attribute;
+import documentsystem.constants.ImporterType;
 import documentsystem.document.Document;
 import documentsystem.util.DocumentSystemUtility;
 import lombok.Builder;
@@ -28,7 +29,6 @@ public class ReportImporter implements Importer {
     @Override
     public Document importFile(File file) {
         /* validation logic : extension Check */
-        if (!file.exists()) throw new IllegalArgumentException("File not exist");
         if (!DocumentSystemUtility.getFileExtension(file.getName()).equals(EXTENSION))
             throw new IllegalArgumentException("File extension has to be " + EXTENSION);
 
@@ -45,7 +45,7 @@ public class ReportImporter implements Importer {
         attributes.put(Attribute.TYPE, EXTENSION);
         attributes.put(Attribute.PATIENT, DocumentSystemUtility.getFileExtension(file.getName()));
 
-        return Document.builder().attributes(attributes).lines(lines).build();
+        return Document.builder().attributes(attributes).lines(lines).type(ImporterType.valueOf(EXTENSION.toUpperCase())).build();
     }
 
     private String getPatientName(List<String> lines) {
